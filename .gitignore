@@ -1,0 +1,4 @@
+# ignore all files with suffix of class
+*.class
+# ignore notification that is not mine
+notification/
