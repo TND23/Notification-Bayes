@@ -1,14 +1,11 @@
 package learning;
-import learning.Klass;
+import learning.NaiveBayesClassification;
 import learning.Important;
 import learning.Unimportant;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Notification{
 	// this should probably have a superclass other than Object but idk what
@@ -25,7 +22,7 @@ public class Notification{
 	// no idea what this is.
 	private String app;
 	// important, not important, etc.
-	protected Klass klass;
+	protected NaiveBayesClassification naiveBayesClassification ;
 	// want this to belong to a user properly.
 	private String userName;    
 
@@ -33,8 +30,8 @@ public class Notification{
 	// will want to change String path to content and update logic accordingly
 	// FiltrateNotification.NotificationText is going to be the variable type eventually
 	public Notification(String title, String path, String app){
-		title = title;
-		app = app;
+		this.title = title;
+		this.app = app;
 		String content = readFile(path);
 		tokens = parseContent(content);
 		updateVocabulary();
@@ -44,17 +41,14 @@ public class Notification{
   // pretend the 2nd arg (content) is a file for now
 	public static void main(String[] args){
 		Notification docA = new Notification("aa", "/home/tommy/Desktop/bayes/main/sample_docs/ex1.txt", "bar");
-		Notification docB = new Notification("ba", "/home/tommy/Desktop/bayes/main/sample_docs/ex2.txt", "bar");
-		Notification docC = new Notification("ca", "/home/tommy/Desktop/bayes/main/sample_docs/ex3.txt", "bar");
-		Notification docD = new Notification("da", "/home/tommy/Desktop/bayes/main/sample_docs/ex4.txt", "bar");
-		Notification docE = new Notification("ea", "/home/tommy/Desktop/bayes/main/sample_docs/ex5.txt", "bar");
 		Important i = new Important();
 		docA.markAsImportant(i);
-		System.out.println(docA.klass);
+		System.out.println(docA.naiveBayesClassification );
 	}
 
 	// I am using files to simulate the text that will be passed in from the 
 	// application
+	@SuppressWarnings("unused")
 	private static void getPath(){
 		String filePath = new File("").getAbsolutePath();
 		System.out.println(filePath);
@@ -106,7 +100,10 @@ public class Notification{
 			Notification.vocabulary.add(token);
 		}
 	}
-
+	
+	public Set<String> getVocabulary(){
+		return vocabulary;
+	}
 	private void populateTokenHash(){
 		for (String token : tokens.keySet()){
 			if (tokenHash.containsKey(token)){
@@ -126,11 +123,11 @@ public class Notification{
 	// }
 
 	protected void markAsImportant(Important i){
-		this.klass = i;
+		this.naiveBayesClassification  = i;
 	}
 
 	protected void markAsUnimportant(Unimportant u){
-		this.klass = u;
+		this.naiveBayesClassification = u;
 	}
 
 }

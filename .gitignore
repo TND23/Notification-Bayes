@@ -2,3 +2,6 @@
 *.class
 # ignore notification that is not mine
 notification/
+.project
+/bin/
+.classpath

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import learning.Notification;
 import java.util.ArrayList;
 
-public abstract class Klass{
+public abstract class NaiveBayesClassification{
 
-	public static Vector<Klass> instances = new Vector<Klass>(5);
+	public static Vector<NaiveBayesClassification> instances = new Vector<NaiveBayesClassification>(5);
 	private HashMap<String, Boolean> vocabulary = new HashMap<String, Boolean>();
 	protected ArrayList<Notification> notifications = new ArrayList<Notification>();
 	protected String name;
