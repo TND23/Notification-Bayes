@@ -18,10 +18,6 @@ public class Important extends NaiveBayesClassification{
 				
 	}
 
-	public static void main(String[] args){
-
-	}
-
 	public void addNotification(Notification notification){
 		this.notifications.add(notification);
 	}

@@ -7,10 +7,6 @@ import learning.Notification;
 public class Bernouli implements TrainingBackend{
 		
 	private HashMap<String[], Double> conditionalProbability = new HashMap<String[], Double>();
-	/* 
-		REFACTOR: NAME CHANGE 
-		what is prior?
-	*/
 	private HashMap<String, Double> prior = new HashMap<String, Double>();
 
 	public Bernouli(){
@@ -46,7 +42,7 @@ public class Bernouli implements TrainingBackend{
 	// FiltrateNotification.NotificationText is going to be the variable type eventually
 	public void applyBernouli(Notification notification){
 		HashMap<String, Boolean> notificationTokens = notification.tokens;
-		// put a Klass of type k as a key pointing to some double value
+		// put a NaiveBayesClassification of type k as a key pointing to some double value
 		HashMap<NaiveBayesClassification, Double> score = new HashMap<NaiveBayesClassification, Double>();
 		for (NaiveBayesClassification naiveBayesClassification : NaiveBayesClassification.instances){
 			score.put(naiveBayesClassification, Math.log(prior.get(naiveBayesClassification.name)));
@@ -58,7 +54,8 @@ public class Bernouli implements TrainingBackend{
 		notification.naiveBayesClassification = maxNaiveBayesClassification;
 	}
 
-	private void updateNaiveBayesClassificationScore(HashMap<NaiveBayesClassification, Double> score, String token, NaiveBayesClassification naiveBayesClassification, HashMap<String, Boolean> notificationTokens){
+	private void updateNaiveBayesClassificationScore(HashMap<NaiveBayesClassification, Double> score,
+			String token, NaiveBayesClassification naiveBayesClassification, HashMap<String, Boolean> notificationTokens){
 		String[] condProbKey = {token, naiveBayesClassification.name};
 		double scoreDelta = conditionalProbability.get(condProbKey);
 		if (notificationTokens.get(token)){
@@ -90,9 +87,15 @@ public class Bernouli implements TrainingBackend{
 		return Notification.instances.get(name).length;
 	}
 	
-	private void setNaiveBayesClassificationNotificationRatio(NaiveBayesClassification naiveBayesClassification, int notificationCount, int klassNotificationCount){
-		double thisKlassRatio = (double)klassNotificationCount / notificationCount;
-		prior.put(naiveBayesClassification.name, thisKlassRatio);
+	/* 
+	 * If we have N documents, M <= N of which are classified as having NaiveBayesClassification type T,
+	 * the ratio we track is M/N. 
+	*/
+	private void setNaiveBayesClassificationNotificationRatio(
+			NaiveBayesClassification naiveBayesClassification, int notificationCount, int nbcNotificationCount
+			){
+		double thisNbcRatio = (double)nbcNotificationCount / notificationCount;
+		prior.put(naiveBayesClassification.name, thisNbcRatio);
 	}
 
 	// probability will lie between N-1/N and 1/N
@@ -102,7 +105,5 @@ public class Bernouli implements TrainingBackend{
 		double klassNotificationsWithTokenRatio = (double)klassNotificationsWithToken + 1.0 / klassNotificationCount + 2.0;
 		conditionalProbability.put(condProbKey, klassNotificationsWithTokenRatio);		
 	}
-
-	// find words that are extremely common in important or unimportant email 
 
 }

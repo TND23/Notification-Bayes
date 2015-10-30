@@ -8,26 +8,23 @@ import java.util.HashSet;
 import java.io.*;
 
 public class Notification{
-	// this should probably have a superclass other than Object but idk what
- 	// tokenHash is a map from a lower cased word to the number of instances of that word in a notification
-  private	HashMap<String, Integer> tokenHash = new HashMap<String, Integer>();
-  // this is map with a notification klass type and all instance of Notification of that klass type
+	
+ 	// Map from a lower cased word to the number of occurrences of that word in a Notification instance.
+	private HashMap<String, Integer> tokenHash = new HashMap<String, Integer>();
+	
+	// Map a notification type to all instances of Notification of that type.
 	public static HashMap<String, Notification[]> instances;
 
 	protected static Set<String> vocabulary = new HashSet<String>();
 
 	protected HashMap<String, Boolean> tokens = new HashMap<String, Boolean>();
-	// the title of the notification
 	private String title; 
-	// no idea what this is.
 	private String app;
-	// important, not important, etc.
-	protected NaiveBayesClassification naiveBayesClassification ;
-	// want this to belong to a user properly.
+	protected NaiveBayesClassification naiveBayesClassification;
 	private String userName;    
 
 	protected Important imp;
-	// will want to change String path to content and update logic accordingly
+	// Will want to change String path to content.
 	// FiltrateNotification.NotificationText is going to be the variable type eventually
 	public Notification(String title, String path, String app){
 		this.title = title;
@@ -37,24 +34,14 @@ public class Notification{
 		updateVocabulary();
 		populateTokenHash();	
 	}
-   
-  // pretend the 2nd arg (content) is a file for now
-	public static void main(String[] args){
-		Notification docA = new Notification("aa", "/home/tommy/Desktop/bayes/main/sample_docs/ex1.txt", "bar");
-		Important i = new Important();
-		docA.markAsImportant(i);
-		System.out.println(docA.naiveBayesClassification );
-	}
 
-	// I am using files to simulate the text that will be passed in from the 
-	// application
+	// Simulate FiltrateNotification.NotificationText
 	@SuppressWarnings("unused")
 	private static void getPath(){
 		String filePath = new File("").getAbsolutePath();
 		System.out.println(filePath);
 	}
 
-	// look into throwing
 	private String readFile(String path){
 		String content = null;
 		String line;
@@ -78,7 +65,7 @@ public class Notification{
 		}
 	}
 
-	// this seems terrible
+	// Make all words lower case, concatenating together any words separated by one or more spaces or a dash.
 	private HashMap<String, Boolean> parseContent(String content){
 		content = snipString(content);
 		String[] tokensArray = content.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+|-");
@@ -87,7 +74,7 @@ public class Notification{
 		}
 		return tokens;
 	}
-	// this is to be removed once no longer dealing with files
+	// Remove when no longer dealing with files.
 	private String snipString(String content){
 		if (content.startsWith("null")){
 			content = content.substring(4);
@@ -101,9 +88,10 @@ public class Notification{
 		}
 	}
 	
-	public Set<String> getVocabulary(){
+	public static Set<String> getVocabulary(){
 		return vocabulary;
 	}
+	
 	private void populateTokenHash(){
 		for (String token : tokens.keySet()){
 			if (tokenHash.containsKey(token)){
@@ -115,13 +103,6 @@ public class Notification{
 		}
 	}
 
-	// would like to be able to pass in a klass type to a setKlass method
-	// and set it to that: 
-	
-	// protected <Klass> void setKlass(Klass k){
-	// 	this.klass = k;
-	// }
-
 	protected void markAsImportant(Important i){
 		this.naiveBayesClassification  = i;
 	}
@@ -129,5 +110,4 @@ public class Notification{
 	protected void markAsUnimportant(Unimportant u){
 		this.naiveBayesClassification = u;
 	}
-
 }

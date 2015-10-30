@@ -12,10 +12,6 @@ public abstract class NaiveBayesClassification{
 	protected String name;
 	protected String uuid;
 	
-	public static void main(String[] args){
-
-	}
-
 	// faster search for words in vocabulary this way than if it were a list
 	public void addTokens(String[] tokens){
 		for (int i = 0; i < tokens.length; i++){
